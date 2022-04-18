@@ -1390,8 +1390,17 @@ class FederalGovernmentDatabaseUpdateTestcase(sas_testcase.SasTestCase):
     self.assertEqual(len(config['registrationRequests']),
                      len(config['grantRequests']))
 
+    current_time = datetime.utcnow()
+    scheduled_cpas_start_time =  current_time + timedelta(minutes=3)
+    sasmon_start_time = scheduled_cpas_start_time.strftime("%H:%M:%S")
+    wait_time_in_secs = (scheduled_cpas_start_time - current_time).seconds
+    scheduled_cpas_end_time = scheduled_cpas_start_time + timedelta(seconds=600)
+    run_time_in_secs = (scheduled_cpas_end_time - scheduled_cpas_start_time).seconds
+
+
     # Step 1: Trigger for enabling "schedule daily activities"
-    self._sas_admin.TriggerEnableScheduledDailyActivities()
+    # self._sas_admin.TriggerEnableScheduledDailyActivities()
+    self._sas_admin.TriggerEnableScheduledDailyActivities({"scheduledUtcTime": sasmon_start_time})
 
     # Step 2: Registration of CBSDs and requesting for grants.
     # Forming of 'G' grants for all the configured grants
@@ -1427,37 +1436,37 @@ class FederalGovernmentDatabaseUpdateTestcase(sas_testcase.SasTestCase):
 
     # Step 5: Wait until after the completion of scheduled CPAS
     # Fetching current time in CPAS time zone
-    current_time = datetime.now(timezone(CPAS_TIME_ZONE))
+    # current_time = datetime.now(timezone(CPAS_TIME_ZONE))
 
     # Calculate the scheduled CPAS start time.
-    scheduled_cpas_start_time =  timezone(CPAS_TIME_ZONE).localize(datetime.combine(current_time.date(), time(CPAS_START_TIME)))
+    # scheduled_cpas_start_time =  timezone(CPAS_TIME_ZONE).localize(datetime.combine(current_time.date(), time(CPAS_START_TIME)))
 
     # Checks if CPAS start time is over then wait till next day otherwise
     # wait till scheduled CPAS starts
-    if scheduled_cpas_start_time < current_time:
-      scheduled_cpas_start_time += timedelta(days=1)
+    # if scheduled_cpas_start_time < current_time:
+    #   scheduled_cpas_start_time += timedelta(days=1)
 
     # Wait time in seconds
-    wait_time_in_secs = (scheduled_cpas_start_time - current_time).seconds
+    # wait_time_in_secs = (scheduled_cpas_start_time - current_time).seconds
 
     # Checks if scheduled CPAS starts today and ends on the next day
-    if CPAS_START_TIME < CPAS_END_TIME:
-      scheduled_cpas_end_time = scheduled_cpas_start_time +\
-                                timedelta(hours=CPAS_END_TIME - CPAS_START_TIME)
-    else:
-      scheduled_cpas_end_time = scheduled_cpas_start_time +\
-                                timedelta(days=1, hours=CPAS_END_TIME - CPAS_START_TIME)
+    # if CPAS_START_TIME < CPAS_END_TIME:
+    #   scheduled_cpas_end_time = scheduled_cpas_start_time +\
+    #                             timedelta(hours=CPAS_END_TIME - CPAS_START_TIME)
+    # else:
+    #   scheduled_cpas_end_time = scheduled_cpas_start_time +\
+    #                             timedelta(days=1, hours=CPAS_END_TIME - CPAS_START_TIME)
 
     # Run time in seconds
-    run_time_in_secs = (scheduled_cpas_end_time - scheduled_cpas_start_time).seconds
+    # run_time_in_secs = (scheduled_cpas_end_time - scheduled_cpas_start_time).seconds
 
     # Wait until CPAS is scheduled to start
-    logging.debug('Wait time for scheduled CPAS is (HH:MM:SS) %s',
+    logging.info('Wait time for scheduled CPAS is (HH:MM:SS) %s',
                   strftime("%H:%M:%S", gmtime(wait_time_in_secs)))
     sleep(wait_time_in_secs)
 
     # Wait until CPAS completes
-    logging.debug('Run time for scheduled CPAS is (HH:MM:SS) %s',
+    logging.info('Run time for scheduled CPAS is (HH:MM:SS) %s',
                   strftime("%H:%M:%S", gmtime(run_time_in_secs)))
     sleep(run_time_in_secs)
 

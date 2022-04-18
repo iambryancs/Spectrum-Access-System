@@ -252,9 +252,9 @@ class SasAdminImpl(sas_interface.SasAdminInterface):
     RequestPost('https://%s/admin/trigger/daily_activities_immediately' %
                 self._base_url, None, self._tls_config)
 
-  def TriggerEnableScheduledDailyActivities(self):
+  def TriggerEnableScheduledDailyActivities(self, request):
     RequestPost('https://%s/admin/trigger/enable_scheduled_daily_activities' %
-                self._base_url, None, self._tls_config)
+                self._base_url, request, None, self._tls_config)
 
   def QueryPropagationAndAntennaModel(self, request):
     return RequestPost('https://%s/admin/query/propagation_and_antenna_model' %
