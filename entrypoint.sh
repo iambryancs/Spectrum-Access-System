@@ -61,4 +61,8 @@ mv $SAST_DIR/certs $SAST_DIR/certs.old
 # 2. Copy certs (symlink won't work)
 cp -R $COMMON_DATA/sast/certs $SAST_DIR/certs
 
+# Run test configs
+conda run -n winnf3 --no-capture-output --cwd reference_models python3 test_config.py
+conda run -n winnf3 --no-capture-output --cwd reference_models python3 -m unittest discover -p '*_test.py'
+
 conda run -n winnf3 python3 $@
