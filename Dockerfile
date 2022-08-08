@@ -26,6 +26,7 @@ FROM continuumio/miniconda3:4.10.3p1
 
 ARG PYTHON_VER=3.7
 ENV COMMON_DATA=/mnt/SAS-Data2/SAS-Data/
+ENV PYTHONPATH=/opt/app/src/harness
 
 WORKDIR /opt/app
 
