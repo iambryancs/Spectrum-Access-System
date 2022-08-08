@@ -53,7 +53,8 @@ RUN conda run -n "winnf3" pip3 install pygc \
         jwt \
         portpicker \
         psutil \
-        ftputil
+        ftputil \
+        pytz
 
 RUN conda run -n "crl" pip install six
 
