@@ -30,6 +30,7 @@ ENV COMMON_DATA=/mnt/SAS-Data2/SAS-Data/
 WORKDIR /opt/app
 
 RUN conda create --name "winnf3" python=${PYTHON_VER}
+RUN conda create --name "crl" python=2.7
 
 # We can't activate a conda env non-interactively
 # or in a CI env, so let's use env targetting
@@ -53,6 +54,8 @@ RUN conda run -n "winnf3" pip3 install pygc \
         portpicker \
         psutil \
         ftputil
+
+RUN conda run -n "crl" pip install six
 
 COPY . .
 
